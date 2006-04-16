@@ -1,4 +1,5 @@
 Summary:	IBM ThinkPad configuration tools
+Summary(pl):	Narzêdzia konfiguracyjne dla laptopów IBM ThinkPad
 Name:		tpctl
 Version:	4.17
 Release:	1
@@ -17,8 +18,13 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %description
 tpctl is a package of IBM ThinkPad configuration tools for Linux.
 
+%description -l pl
+tpctl to pakiet narzêdzie konfiguracyjnych dla laptopów IBM ThinkPad
+dla Linuksa.
+
 %package -n apmiser
 Summary:	IBM ThinkPad APM settings daemon
+Summary(pl):	Demon ustawieñ APM dla laptopów IBM ThinkPad
 Group:		Daemons
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}-%{release}
@@ -26,6 +32,10 @@ Requires:	%{name} = %{version}-%{release}
 %description -n apmiser
 apmiser is a tool for IBM ThinkPads that automatically controls the
 APM power settings based on your usage patterns.
+
+%description -n apmiser -l pl
+apmiser to narzêdzie dla laptopów IBM ThinkPad automatycznie steruj±ce
+ustawieniami zasilania APM w oparciu o wybrane wzorce wykorzystania.
 
 %prep
 %setup -q
@@ -43,7 +53,7 @@ cp -p tpctlir/README README.tpctlir
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_mandir}/man8,%{_initrddir}}
+install -d $RPM_BUILD_ROOT{%{_mandir}/man8,/etc/rc.d/init.d}
 %{__make} install \
 	DEST=$RPM_BUILD_ROOT \
 	PATH_BIN=%{_bindir}/ \
@@ -51,28 +61,27 @@ install -d $RPM_BUILD_ROOT{%{_mandir}/man8,%{_initrddir}}
 	PATH_MAN=%{_mandir}/ \
 	PATH_SBIN=%{_sbindir}/
 
-install %{SOURCE1} $RPM_BUILD_ROOT%{_initrddir}/apmiser
+install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/apmiser
 install man/apmiser.8 tpctlir/tpctlir.8 $RPM_BUILD_ROOT%{_mandir}/man8
-
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post -p /sbin/ldconfig
-%postun -p /sbin/ldconfig
+%post	-p /sbin/ldconfig
+%postun	-p /sbin/ldconfig
 
 %post -n apmiser
-[ $1 -eq 1 ] && chkconfig --add apmiser || :
-
-%preun -n apmiser
-if [ $1 -eq 0 ] ; then
-  chkconfig --del apmiser
-  %{_initrddir}/apmiser stop >/dev/null 2>&1 || :
+/sbin/chkconfig --add apmiser
+#%%service apmiser restart
+if [ "$1" != "0" ]; then
+	/etc/rc.d/init.d/apmiser try-restart
 fi
 
-%postun -n apmiser
-[ $1 -gt 0 ] && %{_initrddir}/apmiser try-restart >/dev/null || :
-
+%preun -n apmiser
+if [ "$1" = "0" ] ; then
+	%service apmiser stop
+	/sbin/chkconfig --del apmiser
+fi
 
 %files
 %defattr(644,root,root,755)
@@ -86,6 +95,6 @@ fi
 %files -n apmiser
 %defattr(644,root,root,755)
 %doc apmiser/README
-%attr(755,root,root) %config %{_initrddir}/*
+%attr(754,root,root) /etc/rc.d/init.d/*
 %attr(755,root,root) %{_sbindir}/apmiser
 %{_mandir}/man8/apmiser.8*
