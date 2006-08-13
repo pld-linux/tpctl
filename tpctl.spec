@@ -8,8 +8,7 @@ Group:		Applications
 Source0:	http://dl.sourceforge.net/tpctl/%{name}_%{version}.tar.gz
 # Source0-md5:	00d163c09b290b4cdc7488144f3f7faa
 Source1:	%{name}.apmiser.init
-Patch0:		%{name}-rpm.patch
-Patch1:		%{name}-optflags.patch
+Patch0:		%{name}-makefile.patch
 URL:		http://tpctl.sourceforge.net/
 BuildRequires:	ncurses-ext-devel
 ExclusiveArch:	%{ix86}
@@ -40,14 +39,10 @@ ustawieniami zasilania APM w oparciu o wybrane wzorce wykorzystania.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
 cp -p tpctlir/README README.tpctlir
 
 %build
 %{__make} all \
-	CC="%{__cc}" \
-	CFLAGS="%{rpmcflags} -I/usr/include/ncurses"
-%{__make} -C tpctlir \
 	CC="%{__cc}" \
 	CFLAGS="%{rpmcflags} -I/usr/include/ncurses"
 
@@ -62,12 +57,15 @@ install -d $RPM_BUILD_ROOT{%{_mandir}/man8,/etc/rc.d/init.d}
 	PATH_SBIN=%{_sbindir}/
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/apmiser
-install man/apmiser.8 tpctlir/tpctlir.8 $RPM_BUILD_ROOT%{_mandir}/man8
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post	-p /sbin/ldconfig
+%post
+/sbin/ldconfig
+%banner -e %{name} << EOF
+You need to install kernel-misc-thinkpad for this package to work.
+EOF
 %postun	-p /sbin/ldconfig
 
 %post -n apmiser
