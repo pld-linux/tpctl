@@ -8,6 +8,8 @@ Group:		Applications
 Source0:	http://dl.sourceforge.net/tpctl/%{name}_%{version}.tar.gz
 # Source0-md5:	00d163c09b290b4cdc7488144f3f7faa
 Source1:	%{name}.apmiser.init
+Source2:	http://tpctl.sourceforge.net/PS2-ref.txt
+# Source2-md5:	c10d14fd24df4e5aff33f564daed04c4
 Patch0:		%{name}-makefile.patch
 URL:		http://tpctl.sourceforge.net/
 BuildRequires:	ncurses-ext-devel
@@ -40,6 +42,7 @@ ustawieniami zasilania APM w oparciu o wybrane wzorce wykorzystania.
 %setup -q
 %patch0 -p1
 cp -p tpctlir/README README.tpctlir
+install %{SOURCE2} .
 
 %build
 %{__make} all \
@@ -83,7 +86,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS ChangeLog COPYING README* SUPPORTED* TROUBLE* VGA-MODES
+%doc AUTHORS ChangeLog PS2-ref.txt README* SUPPORTED* TROUBLE* VGA-MODES
 %attr(755,root,root) %{_bindir}/*tpctl
 %attr(755,root,root) %{_sbindir}/tpctlir
 %attr(755,root,root) %{_libdir}/libsmapidev.so.*
