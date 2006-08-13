@@ -1,0 +1,78 @@
+--- tpctl-4.17.orig/Makefile	2004-05-04 17:49:59.000000000 +0200
++++ tpctl-4.17/Makefile	2006-08-13 13:40:15.000000000 +0200
+@@ -3,6 +3,7 @@
+ 	make -C lib
+ 	make -C tpctl
+ 	make -C ntpctl
++	make -C tpctlir
+ 
+ VER_RELEASE:=4.14
+ VER_SMAPIDEV:=2.0
+@@ -19,21 +20,24 @@
+ 
+ install_libraries:
+ 	if [ ! -d $(DEST)$(PATH_LIB) ]; then mkdir -p -m 755 $(DEST)$(PATH_LIB) ; fi
+-	install -m 755 -o 0 -g 0 lib/libsmapidev.so.$(VER_SMAPIDEV) $(DEST)$(PATH_LIB)
++	install -m 755 lib/libsmapidev.so.$(VER_SMAPIDEV) $(DEST)$(PATH_LIB)
+ 	ln -sf libsmapidev.so.$(VER_SMAPIDEV) $(DEST)$(PATH_LIB)libsmapidev.so.2
+ 
+ install_binaries:
+ 	if [ ! -d $(DEST)$(PATH_BIN) ]; then mkdir -p -m 755 $(DEST)$(PATH_BIN) ; fi
+-	install -m 755 -o 0 -g 0 tpctl/tpctl $(DEST)$(PATH_BIN)tpctl
+-	install -m 755 -o 0 -g 0 ntpctl/ntpctl $(DEST)$(PATH_BIN)ntpctl
+-	if [ -e tpctlir/tpctlir ]; then install -m 755 -o 0 -g 0 tpctlir/tpctlir $(DEST)$(PATH_SBIN)tpctlir ; fi
+ 	if [ ! -d $(DEST)$(PATH_SBIN) ]; then mkdir -p -m 755 $(DEST)$(PATH_SBIN) ; fi
+-	install -m 755 -o 0 -g 0 apmiser/apmiser $(DEST)$(PATH_SBIN)apmiser
++	install -m 755 tpctl/tpctl $(DEST)$(PATH_BIN)tpctl
++	install -m 755 ntpctl/ntpctl $(DEST)$(PATH_BIN)ntpctl
++	install -m 755 tpctlir/tpctlir $(DEST)$(PATH_SBIN)tpctlir
++	install -m 755 apmiser/apmiser $(DEST)$(PATH_SBIN)apmiser
+ 
+ install_man:
+ 	if [ ! -d $(DEST)$(PATH_MAN)man1 ]; then mkdir -p -m 755 $(DEST)$(PATH_MAN)man1 ; fi
+-	install -m 644 -o 0 -g 0 man/tpctl.1 $(DEST)$(PATH_MAN)man1/tpctl.1
+-	install -m 644 -o 0 -g 0 man/ntpctl.1 $(DEST)$(PATH_MAN)man1/ntpctl.1
++	if [ ! -d $(DEST)$(PATH_MAN)man8 ]; then mkdir -p -m 755 $(DEST)$(PATH_MAN)man8 ; fi
++	install -m 644 man/tpctl.1 $(DEST)$(PATH_MAN)man1/tpctl.1
++	install -m 644 man/ntpctl.1 $(DEST)$(PATH_MAN)man1/ntpctl.1
++	install -m 644 man/apmiser.8 $(DEST)$(PATH_MAN)man8/apmiser.8
++	install -m 644 tpctlir/tpctlir.8 $(DEST)$(PATH_MAN)man8/tpctlir.8
+ 
+ uninstall: uninstall_libraries uninstall_binaries uninstall_man
+ 
+@@ -49,6 +53,8 @@
+ uninstall_man:
+ 	rm -vf $(DEST)$(PATH_MAN)man1/tpctl.1
+ 	rm -vf $(DEST)$(PATH_MAN)man1/ntpctl.1
++	rm -vf $(DEST)$(PATH_MAN)man8/apmiser.8
++	rm -vf $(DEST)$(PATH_MAN)man8/tpctlir.8
+ 
+ depend:
+ 
+--- tpctl-4.17.orig/tpctlir/Makefile	2003-10-15 20:07:07.000000000 +0200
++++ tpctl-4.17/tpctlir/Makefile	2006-08-13 13:39:04.000000000 +0200
+@@ -4,24 +4,8 @@
+ 
+ ALLCFLAGS:=$(CFLAGS) -I$(DIR_KERNEL)/include -DLINUX
+ 
+-DIR_SBIN=/usr/sbin
+-DIR_MAN=/usr/share/man
+-
+ tpctlir: tpctlir.c
+ 	$(CC) $(CFLAGS) -o tpctlir tpctlir.c
+ 
+ clean:
+ 	rm -vf tpctlir core *.o
+-
+-install: uninstall install_binaries install_man
+-
+-install_binaries:
+-	install -m 755 -o 0 -g 0 tpctlir $(DIR_SBIN)/tpctlir
+-
+-install_man:
+-	install -m 644 -o 0 -g 0 tpctlir.8 $(DIR_MAN)/man8/tpctlir.8
+-
+-uninstall:
+-	rm -vf $(DIR_SBIN)/tpctlir
+-	rm -vf $(DIR_MAN)/man1/tpctlir.1
+-	rm -vf $(DIR_MAN)/man8/tpctlir.8
