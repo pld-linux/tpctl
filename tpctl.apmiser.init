@@ -1,0 +1,69 @@
+#!/bin/sh
+#
+# apmiser      This shell script takes care of starting and stopping apmiser
+#
+# chkconfig:   2345 27 73
+# description: apmiser is used for monitoring system usage when on batteries, \
+#              scaling the CPU voltage down via tpctl when idle to save power.
+# pidfile:     /var/run/apmiser.pid
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+exec=/usr/sbin/apmiser
+lockfile=/var/lock/subsys/$prog
+
+start() {
+    msg_starting "apmiser"
+    retval=0
+    # Sanity checks.
+    /sbin/modprobe thinkpad >/dev/null 2>&1
+    for f in /dev/thinkpad /proc/apm; do
+        if [ ! -e $f ]; then
+            failure $"$f not available, startup"
+            retval=1
+        fi
+    done
+    if [ $retval -eq 0 ]; then
+        # Start daemons.
+        daemon $exec --daemon
+        retval=$?
+    fi
+    echo
+    [ $retval -eq 0 ] && touch $lockfile
+    return $retval
+}
+
+stop() {
+    # Stop daemons.
+    msg_stopping "apmiser"
+    killproc $prog
+    retval=$?
+    echo
+    [ $retval -eq 0 ] && rm -f $lockfile
+    return $retval
+}
+
+restart() {
+    stop
+    start
+}
+
+# See how we were called.
+case "$1" in
+  start|stop|restart)
+    $1
+    ;;
+  reload|force-reload)
+    restart
+    ;;
+  condrestart|try-restart)
+    [ ! -f $lockfile ] || restart
+    ;;
+  status)
+    status $prog
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|status|restart|try-restart|reload|force-reload}"
+    exit 3
+esac
