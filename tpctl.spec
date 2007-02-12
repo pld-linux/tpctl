@@ -1,5 +1,5 @@
 Summary:	IBM ThinkPad configuration tools
-Summary(pl.UTF-8):   Narzędzia konfiguracyjne dla laptopów IBM ThinkPad
+Summary(pl.UTF-8):	Narzędzia konfiguracyjne dla laptopów IBM ThinkPad
 Name:		tpctl
 Version:	4.17
 Release:	1
@@ -25,7 +25,7 @@ dla Linuksa.
 
 %package -n apmiser
 Summary:	IBM ThinkPad APM settings daemon
-Summary(pl.UTF-8):   Demon ustawień APM dla laptopów IBM ThinkPad
+Summary(pl.UTF-8):	Demon ustawień APM dla laptopów IBM ThinkPad
 Group:		Daemons
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}-%{release}
