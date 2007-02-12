@@ -1,5 +1,5 @@
 Summary:	IBM ThinkPad configuration tools
-Summary(pl):	Narzêdzia konfiguracyjne dla laptopów IBM ThinkPad
+Summary(pl.UTF-8):   NarzÄ™dzia konfiguracyjne dla laptopÃ³w IBM ThinkPad
 Name:		tpctl
 Version:	4.17
 Release:	1
@@ -19,13 +19,13 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %description
 tpctl is a package of IBM ThinkPad configuration tools for Linux.
 
-%description -l pl
-tpctl to pakiet narzêdzie konfiguracyjnych dla laptopów IBM ThinkPad
+%description -l pl.UTF-8
+tpctl to pakiet narzÄ™dzie konfiguracyjnych dla laptopÃ³w IBM ThinkPad
 dla Linuksa.
 
 %package -n apmiser
 Summary:	IBM ThinkPad APM settings daemon
-Summary(pl):	Demon ustawieñ APM dla laptopów IBM ThinkPad
+Summary(pl.UTF-8):   Demon ustawieÅ„ APM dla laptopÃ³w IBM ThinkPad
 Group:		Daemons
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}-%{release}
@@ -34,8 +34,8 @@ Requires:	%{name} = %{version}-%{release}
 apmiser is a tool for IBM ThinkPads that automatically controls the
 APM power settings based on your usage patterns.
 
-%description -n apmiser -l pl
-apmiser to narzêdzie dla laptopów IBM ThinkPad automatycznie steruj±ce
+%description -n apmiser -l pl.UTF-8
+apmiser to narzÄ™dzie dla laptopÃ³w IBM ThinkPad automatycznie sterujÄ…ce
 ustawieniami zasilania APM w oparciu o wybrane wzorce wykorzystania.
 
 %prep
