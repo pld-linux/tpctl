@@ -2,7 +2,7 @@ Summary:	IBM ThinkPad configuration tools
 Summary(pl.UTF-8):	Narzędzia konfiguracyjne dla laptopów IBM ThinkPad
 Name:		tpctl
 Version:	4.17
-Release:	1
+Release:	2
 License:	GPL
 Group:		Applications
 Source0:	http://dl.sourceforge.net/tpctl/%{name}_%{version}.tar.gz
